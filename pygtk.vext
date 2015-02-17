@@ -19,3 +19,7 @@ test_import:
 # pygtk.pth does most of the initialisation of pygtk
 pths:
     pygtk.pth
+
+
+install_hints:
+    PyGTK was not found, install it in your system python.

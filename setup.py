@@ -4,7 +4,9 @@ from codecs import open  # To use a consistent encoding
 from os import path, unlink
 from glob import glob
 from shutil import copyfile
-from sys import argv
+from sys import argv, exit
+from vext import open_spec
+from vext.install import check_installable
 
 here = path.abspath(path.dirname(__file__))
 site_packages_path = sysconfig.get_python_lib()
@@ -13,13 +15,18 @@ site_packages_path = sysconfig.get_python_lib()
 with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
+if not check_installable(open_spec(open('pygtk.vext'))):
+    # If requirements are not available this will
+    # display a hint from the spec.
+    exit(1)
+
 setup(
     name='vext.pygtk',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.3',
+    version='0.0.4',
 
     description='Use system python packages in a virtualenv',
     long_description=long_description,
@@ -64,7 +71,7 @@ setup(
     # project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=["vext"],
+    install_requires=["vext==0.0.4"],
 
     # List additional groups of dependencies here (e.g. development dependencies).
     # You can install these using the following syntax, for example:
@@ -83,6 +90,6 @@ setup(
 
     # Install pygtk vext
     data_files=[
-        (path.join(site_packages_path, 'vext/specs'), ["pygtk.vext"])
+        (path.join(site_packages_path, 'vext/specs'), ['pygtk.vext'])
     ],
 )
