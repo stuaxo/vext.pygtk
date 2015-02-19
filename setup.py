@@ -5,8 +5,6 @@ from os import path, unlink
 from glob import glob
 from shutil import copyfile
 from sys import argv, exit
-from vext import open_spec
-from vext.install import check_installable
 
 here = path.abspath(path.dirname(__file__))
 site_packages_path = sysconfig.get_python_lib()
@@ -15,10 +13,16 @@ site_packages_path = sysconfig.get_python_lib()
 with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
-if not check_installable(open_spec(open('pygtk.vext'))):
-    # If requirements are not available this will
-    # display a hint from the spec.
-    exit(1)
+try:
+   from vext import open_spec
+   from vext.install import check_installable
+   if not check_installable(open_spec(open('pygtk.vext'))):
+        # If requirements are not available this will
+        # display a hint from the spec.
+        exit(1)
+except ImportError:
+    # Workaround...
+    pass
 
 setup(
     name='vext.pygtk',
