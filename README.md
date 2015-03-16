@@ -1,4 +1,5 @@
-Use PyGTK in a virtualenv on Linux, Windows or OSX, thanks to Vext.
+Use PyGTK in a virtualenv on Linux, Windows or OSX.
+===================================================
 
 Usage
 -----
