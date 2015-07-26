@@ -1,29 +1,39 @@
 import os
+import sys
 
-here=os.path.dirname(os.path.abspath(__file__))
-
+from glob import glob
 from distutils import sysconfig
 from setuptools import setup
+from setuptools.command.install import install
 
+here=os.path.dirname(os.path.abspath(__file__))
 site_packages_path = sysconfig.get_python_lib()
 
 # Get the long description from the relevant file
 with open(os.path.join(here, 'DESCRIPTION.rst')) as f:
     long_description = f.read()
 
+
+
+class CheckInstall(install):
+    """Customized setuptools install command - prints a friendly greeting."""
+    def run(self):
+        # TODO - massive memory leak happens here !
+        self.do_egg_install()
+ 
 setup(
     name='vext.pygtk',
-
-    version='0.1.1',
-
-    description='Use system python packages in a virtualenv',
+    version='0.2.1',
+    description='Use system pygtk from a virtualenv',
     long_description=long_description,
 
-    url='https://github.com/stuaxo/vext',
+    cmdclass={
+        'install': CheckInstall,
+    },
 
+    url='https://github.com/stuaxo/vext',
     author='Stuart Axon',
     author_email='stuaxo2@yahoo.com',
-
     license='MIT',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -50,15 +60,9 @@ setup(
 
     install_requires=["vext"],
 
-    # If there are data files included in your packages that need to be
-    # installed, specify them here.  If using Python 2.6 or less, then these
-    # have to be included in MANIFEST.in as well.
-    #package_data={
-    #    'sample': ['package_data.dat'],
-    #},
-
     # Install pygtk vext
     data_files=[
-        (os.path.join(site_packages_path, 'vext/specs'), ['pygtk.vext'])
+        (os.path.join(sys.prefix, 'vext/specs'), glob('*.vext'))
     ],
+
 )

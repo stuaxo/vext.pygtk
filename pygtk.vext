@@ -8,6 +8,7 @@ modules:
     pygtk
     glib
     gobject
+    gtksourceview2
 
 test_import:
     # Vext will try and import any modules here
