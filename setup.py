@@ -1,29 +1,32 @@
-import os
-import sys
-
+from codecs import open  # To use a consistent encoding
 from glob import glob
+from os.path import dirname, abspath, join
+from sys import prefix
+
 from distutils import sysconfig
 from setuptools import setup
 from setuptools.command.install import install
 
-here=os.path.dirname(os.path.abspath(__file__))
+here=dirname(abspath(__file__))
 site_packages_path = sysconfig.get_python_lib()
+vext_files = list(glob("*.vext"))
 
-# Get the long description from the relevant file
-with open(os.path.join(here, 'DESCRIPTION.rst')) as f:
-    long_description = f.read()
-
-
+def _post_install():
+    from vext.install import check_sysdeps
+    check_sysdeps(join(here, *vext_files))
 
 class CheckInstall(install):
-    """Customized setuptools install command - prints a friendly greeting."""
     def run(self):
-        # TODO - massive memory leak happens here !
         self.do_egg_install()
- 
+        self.execute(_post_install, [], msg="Check system dependencies:")
+
+# Get the long description from the relevant file
+with open(join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name='vext.pygtk',
-    version='0.2.1',
+    version='0.2.2',
     description='Use system pygtk from a virtualenv',
     long_description=long_description,
 
@@ -62,7 +65,7 @@ setup(
 
     # Install pygtk vext
     data_files=[
-        (os.path.join(sys.prefix, 'vext/specs'), glob('*.vext'))
+        (join(prefix, 'share/vext/specs'), vext_files)
     ],
 
 )
