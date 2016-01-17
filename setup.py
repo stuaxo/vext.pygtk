@@ -1,7 +1,18 @@
-from codecs import open  # To use a consistent encoding
+#!/usr/bin/env python
+info="""
+Allow use of system PyGtk (Gtk2) from a virtualenv
+Should work on all platforms.
+
+report bugs to https://github.com/stuaxo/vext
+"""
+
+version="0.5.2"
+vext_version="vext>=%s" % version
+ 
+
 from glob import glob
 from os.path import dirname, abspath, join
-from sys import prefix
+from subprocess import call
 
 from distutils import sysconfig
 from setuptools import setup
@@ -9,27 +20,22 @@ from setuptools.command.install import install
 
 here=dirname(abspath(__file__))
 site_packages_path = sysconfig.get_python_lib()
-vext_files = glob("*.vext")
+vext_files = [join(here, fn) for fn in glob("*.vext")]
 
 def _post_install():
-    from vext.install import check_sysdeps, install_vexts
-    install_vexts(vext_files)  # data_files doesn't work in pip7 so do it ourselves
-    check_sysdeps(join(here, *vext_files))
+    cmd = ["vext", "-i " + " ".join(vext_files)]
+    call(cmd)
 
 class Install(install):
     def run(self):
         self.do_egg_install()
-        self.execute(_post_install, [], msg="Check system dependencies:")
-
-# Get the long description from the relevant file
-with open(join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
-    long_description = f.read()
+        self.execute(_post_install, [], msg="Install vext files:")
 
 setup(
     name='vext.pygtk',
-    version='0.5.0',
+    version=version,
     description='Use system pygtk from a virtualenv',
-    long_description=long_description,
+    long_description=info,
 
     cmdclass={
         'install': Install,
@@ -63,5 +69,5 @@ setup(
     keywords='virtualenv pygtk vext',
 
     setup_requires=["setuptools>=0.18.8"],
-    install_requires=["vext>=0.5.0"],
+    install_requires=[vext_version],
 )
