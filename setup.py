@@ -9,7 +9,7 @@ Should work on all platforms.
 report bugs to https://github.com/stuaxo/vext
 """
 
-version="0.5.14"
+version="0.5.20"
 vext_version="vext>=%s" % version
 
 
@@ -35,7 +35,7 @@ class Install(install):
         # if ran from some setup.py then vexts own setup will take care of this...
         #
         # TOOD - Move this code to a common place.
-        print("vext.gi Install")
+        print("vext.pygtk Install")
         if sys.prefix == '/usr':
             print("Not installing PTH file to real prefix")
             return
