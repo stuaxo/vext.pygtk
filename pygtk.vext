@@ -13,7 +13,8 @@ modules:
 test_import:
     # Vext will try and import any modules here
     # To check if the install worked
-    gtk, pygtk
+    gtk
+    pygtk
 
 # move glib and gobject to their own vexts
 
