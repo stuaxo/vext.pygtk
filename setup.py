@@ -9,7 +9,7 @@ Should work on all platforms.
 report bugs to https://github.com/stuaxo/vext
 """
 
-version = "0.7.0"
+version = "0.7.4"
 vext_version = "vext>=%s" % version
 
 from glob import glob
